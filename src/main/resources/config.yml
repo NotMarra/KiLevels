@@ -1,0 +1,48 @@
+#     _  __ _  _                       _
+#    | |/ /(_)| |     ___ __   __ ___ | | ___
+#    | ' / | || |    / _ \\ \ / // _ \| |/ __|
+#    | . \ | || |___|  __/ \ V /|  __/| |\__ \
+#    |_|\_\|_||_____|\___|  \_/  \___||_||___/
+#
+
+prefix: "<gradient:#ff03ff:#dd03ff><bold>KiLevels</bold></gradient> <dark_gray>»</dark_gray> <white>"
+level-formula: "100 * %level% ^ 2"
+
+levels:
+  1:
+    title: "I"
+    rewards:
+      text:
+        - "<green> + 100$"
+        - "Grants fly permission"
+      actions:
+        - "[VAULT_ADD] 100"
+        - "[PERMISSION_ADD] fly"
+  2:
+    title: "II"
+    rewards:
+      text:
+        - "<green> + 100$"
+      actions:
+        - "[VAULT_ADD] 100"
+  3:
+    title: "III"
+    rewards:
+      text:
+        - "<green> + 100$"
+      actions:
+        - "[VAULT_ADD] 100"
+  4:
+    title: "IV"
+    rewards:
+      text:
+        - "<green> + 100$"
+      actions:
+        - "[VAULT_ADD] 100"
+  5:
+    title: "V"
+    rewards:
+      text:
+        - "<green> + 500$"
+      actions:
+        - "[VAULT_ADD] 500"
