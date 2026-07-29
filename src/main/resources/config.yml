@@ -4,9 +4,10 @@
 #    | . \ | || |___|  __/ \ V /|  __/| |\__ \
 #    |_|\_\|_||_____|\___|  \_/  \___||_||___/
 #
+debug: true
 
 prefix: "<gradient:#ff03ff:#dd03ff><bold>KiLevels</bold></gradient> <dark_gray>»</dark_gray> <white>"
-level-formula: "100 * %level% ^ 2"
+levelFormula: "100 * %level% ^ 2"
 
 levels:
   1:

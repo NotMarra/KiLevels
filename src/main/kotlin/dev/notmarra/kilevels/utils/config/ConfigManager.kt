@@ -1,0 +1,37 @@
+package dev.notmarra.kilevels.utils.config
+
+import org.bukkit.plugin.Plugin
+import org.spongepowered.configurate.yaml.NodeStyle
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader
+import java.io.File
+
+class ConfigManager(private val plugin: Plugin) {
+    private val configFile = File(plugin.dataFolder, "config.yml")
+    private lateinit var loader: YamlConfigurationLoader
+
+    lateinit var config: MainConfig
+        private set
+
+    fun load() {
+        if (!plugin.dataFolder.exists()) plugin.dataFolder.mkdirs()
+
+        if (!configFile.exists()) configFile.createNewFile()
+
+        loader = YamlConfigurationLoader.builder()
+            .path(configFile.toPath())
+            .nodeStyle(NodeStyle.BLOCK)
+            .build()
+
+        try {
+            val root = loader.load()
+
+            config = root.get(MainConfig::class.java) ?: MainConfig()
+
+            root.set(MainConfig::class.java, config)
+            loader.save(root)
+        } catch (e: Exception) {
+            plugin.logger.severe(e.message)
+            config = MainConfig()
+        }
+    }
+}
