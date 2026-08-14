@@ -6,8 +6,38 @@
 #
 debug: true
 
+language: "en"
+
 prefix: "<gradient:#ff03ff:#dd03ff><bold>KiLevels</bold></gradient> <dark_gray>»</dark_gray> <white>"
 levelFormula: "100 * %level% ^ 2"
+
+data:
+  # SQLite | MySQL
+  type: "SQLite"
+
+  table: "KiLevels"
+
+  host: "localhost"
+  port: 3306
+  username: "root"
+  database: "YourDatabase"
+  password: ""
+
+  # if you don't know what this does, don't touch it!
+  pool:
+    maximumPoolSize: 10
+    minimumIdle: 2
+    connectionTimeout: 30000
+    idleTimeout: 600000
+    maxLifetime: 1800000
+
+  # If you want more control around DB you can use JdbcUrl
+  # example url:  jdbc:mysql://[host]:[port]/[database]?parameter=value
+  # JdbcUrl: "jdbc:mysql://localhost:3306/YourDatabase?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+
+cache:
+  ttl: 300 # 5 minutes
+  destroyOnLeave: true
 
 levels:
   1:
@@ -17,33 +47,34 @@ levels:
         - "<green> + 100$"
         - "Grants fly permission"
       actions:
-        - "[VAULT_ADD] 100"
-        - "[PERMISSION_ADD] fly"
+        - "[MONEY] 100"
+        - "[COMMAND] fly"
   2:
     title: "II"
     rewards:
       text:
         - "<green> + 100$"
       actions:
-        - "[VAULT_ADD] 100"
+        - "[MONEY] 100"
+        - "[XP] 50"
   3:
     title: "III"
     rewards:
       text:
         - "<green> + 100$"
       actions:
-        - "[VAULT_ADD] 100"
+        - "[MONEY] 100"
   4:
     title: "IV"
     rewards:
       text:
         - "<green> + 100$"
       actions:
-        - "[VAULT_ADD] 100"
+        - "[MONEY] 100"
   5:
     title: "V"
     rewards:
       text:
         - "<green> + 500$"
       actions:
-        - "[VAULT_ADD] 500"
+        - "[MONEY] 500"

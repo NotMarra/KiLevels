@@ -1,11 +1,12 @@
 package dev.notmarra.kilevels.utils.config
 
+import dev.notmarra.kilevels.KiLevels
 import org.bukkit.plugin.Plugin
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 import java.io.File
 
-class ConfigManager(private val plugin: Plugin) {
+class ConfigManager(private val plugin: KiLevels) {
     private val configFile = File(plugin.dataFolder, "config.yml")
     private lateinit var loader: YamlConfigurationLoader
 
@@ -15,7 +16,7 @@ class ConfigManager(private val plugin: Plugin) {
     fun load() {
         if (!plugin.dataFolder.exists()) plugin.dataFolder.mkdirs()
 
-        if (!configFile.exists()) configFile.createNewFile()
+        if (!configFile.exists()) plugin.saveResource("config.yml", false)
 
         loader = YamlConfigurationLoader.builder()
             .path(configFile.toPath())
@@ -24,13 +25,9 @@ class ConfigManager(private val plugin: Plugin) {
 
         try {
             val root = loader.load()
-
             config = root.get(MainConfig::class.java) ?: MainConfig()
-
-            root.set(MainConfig::class.java, config)
-            loader.save(root)
         } catch (e: Exception) {
-            plugin.logger.severe(e.message)
+            plugin.log.severe(e.message)
             config = MainConfig()
         }
     }
