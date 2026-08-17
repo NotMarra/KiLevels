@@ -1,10 +1,10 @@
-package dev.notmarra.kilevels.data
+package dev.notmarra.kilevels.api.model
 
 import java.util.UUID
 
 data class PlayerProfile(
     val uuid: UUID,
     val name: String,
-    val level: Int,
-    val xp: Long
+    var level: Int,
+    var xp: Long
 )

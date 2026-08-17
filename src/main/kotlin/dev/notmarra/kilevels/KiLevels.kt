@@ -2,6 +2,8 @@ package dev.notmarra.kilevels
 
 import dev.notmarra.kilevels.data.CacheManager
 import dev.notmarra.kilevels.data.DatabaseManager
+import dev.notmarra.kilevels.events.JoinEvent
+import dev.notmarra.kilevels.events.LeaveEvent
 import dev.notmarra.kilevels.utils.config.ConfigManager
 import dev.notmarra.kilevels.utils.KiLevelsLogger
 import org.bukkit.plugin.java.JavaPlugin
@@ -21,6 +23,10 @@ class KiLevels : JavaPlugin() {
         databaseManager = DatabaseManager(this)
         cacheManager = CacheManager(this)
         InvUI.getInstance().setPlugin(this)
+
+        log.debug("Initializing listeners")
+        server.pluginManager.registerEvents(JoinEvent(this), this)
+        server.pluginManager.registerEvents(LeaveEvent(this), this)
 
         log.info("Plugin enabled successfully!")
     }

@@ -3,6 +3,7 @@ package dev.notmarra.kilevels.data
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import dev.notmarra.kilevels.KiLevels
+import dev.notmarra.kilevels.api.model.PlayerProfile
 import org.bukkit.entity.Player
 import java.sql.Connection
 import java.sql.SQLException
@@ -15,8 +16,12 @@ class DatabaseManager(private val plugin: KiLevels) {
         private set
 
     init {
+        plugin.log.debug("Initializing database connection...")
         setup()
+        plugin.log.debug("Database connection initialized!")
+        plugin.log.debug("Trying to setup database tables if not exists...")
         init()
+        plugin.log.debug("Database loaded successfully!")
     }
 
     fun setup() {
@@ -33,7 +38,7 @@ class DatabaseManager(private val plugin: KiLevels) {
                 jdbcUrl = config.jdbcUrl
             } else {
                 if (config.type.equals("SQLite", ignoreCase = true)) {
-                    val dbFile = plugin.dataFolder.resolve("${config.database}.db")
+                    val dbFile = plugin.dataFolder.resolve("data.db")
                     jdbcUrl = "jdbc:sqlite:${dbFile.absolutePath}"
 
                 } else {
@@ -103,7 +108,7 @@ class DatabaseManager(private val plugin: KiLevels) {
     }
 
     fun createProfile(profile: PlayerProfile) {
-        val query = "INSERT IGNORE ${config.table} (uuid, level, xp) VALUES (?, ?, ?)"
+        val query = "INSERT OR IGNORE INTO ${config.table} (uuid, level, xp) VALUES (?, ?, ?)"
 
         try {
             dataSource.connection.use { conn ->
