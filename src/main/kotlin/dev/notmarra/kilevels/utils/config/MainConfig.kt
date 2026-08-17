@@ -36,7 +36,7 @@ data class DataPool(
 
 @ConfigSerializable
 data class CacheConfig(
-    val ttl: Int = 300,
+    val ttl: Long = 300,
     val destroyOnLeave: Boolean = true,
 )
 

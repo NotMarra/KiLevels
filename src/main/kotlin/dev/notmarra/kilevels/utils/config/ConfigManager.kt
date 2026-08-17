@@ -13,6 +13,10 @@ class ConfigManager(private val plugin: KiLevels) {
     lateinit var config: MainConfig
         private set
 
+    init {
+        load()
+    }
+
     fun load() {
         if (!plugin.dataFolder.exists()) plugin.dataFolder.mkdirs()
 

@@ -1,5 +1,6 @@
 package dev.notmarra.kilevels
 
+import dev.notmarra.kilevels.data.CacheManager
 import dev.notmarra.kilevels.data.DatabaseManager
 import dev.notmarra.kilevels.utils.config.ConfigManager
 import dev.notmarra.kilevels.utils.KiLevelsLogger
@@ -11,21 +12,21 @@ class KiLevels : JavaPlugin() {
         private set
     lateinit var databaseManager: DatabaseManager
         private set
+    lateinit var cacheManager: CacheManager
+        private set
     val log = KiLevelsLogger(this)
 
     override fun onEnable() {
         configManager = ConfigManager(this)
-        configManager.load()
         databaseManager = DatabaseManager(this)
-        log.debug("Starting DB")
-        databaseManager.setup()
-
+        cacheManager = CacheManager(this)
         InvUI.getInstance().setPlugin(this)
 
         log.info("Plugin enabled successfully!")
     }
 
     override fun onDisable() {
+        cacheManager.saveAll()
         if (::databaseManager.isInitialized) {
             databaseManager.close()
         }
