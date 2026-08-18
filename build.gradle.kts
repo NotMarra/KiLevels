@@ -17,6 +17,7 @@ dependencies {
     implementation("xyz.xenondevs.invui:invui-kotlin:2.2.0")
     implementation("org.spongepowered:configurate-yaml:4.2.0")
     implementation("com.zaxxer:HikariCP:7.1.0")
+    implementation("net.objecthunter:exp4j:0.4.8")
 }
 
 kotlin {

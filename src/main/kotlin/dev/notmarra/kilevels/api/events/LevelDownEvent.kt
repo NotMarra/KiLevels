@@ -5,7 +5,7 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class LevelUpEvent(
+class LevelDownEvent(
     val player: OfflinePlayer,
     val oldLevel: UInt,
     val newLevel: UInt,

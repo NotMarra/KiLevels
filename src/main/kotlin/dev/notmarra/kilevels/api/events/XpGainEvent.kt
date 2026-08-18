@@ -1,14 +1,14 @@
 package dev.notmarra.kilevels.api.events
 
 import dev.notmarra.kilevels.utils.XpSource
-import org.bukkit.entity.Player
+import org.bukkit.OfflinePlayer
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 class XpGainEvent(
-    val player: Player,
-    var amount: Long,
+    val player: OfflinePlayer,
+    var amount: ULong,
     val source: XpSource
 ) : Event(), Cancellable {
 

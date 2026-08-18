@@ -76,7 +76,11 @@ class CacheManager(private val plugin: KiLevels) {
      * @return PlayerProfile
      */
     fun getProfile(uuid: UUID): PlayerProfile? {
-        return cache[uuid]
+        var profile: PlayerProfile? = cache[uuid]
+        if (profile == null) {
+            profile = plugin.databaseManager.getProfile(uuid)
+        }
+        return profile
     }
 
     /**
@@ -93,7 +97,7 @@ class CacheManager(private val plugin: KiLevels) {
         val intervalTicks = intervalSeconds * 20L
 
         plugin.server.scheduler.runTaskTimerAsynchronously(plugin, Runnable {
-            if (cache.isNotEmpty()) return@Runnable
+            if (cache.isEmpty()) return@Runnable
 
             plugin.log.debug("Starting autosaveTask (interval: $intervalTicks , size: ${cache.size})")
 
@@ -117,7 +121,7 @@ class CacheManager(private val plugin: KiLevels) {
         var profile = plugin.databaseManager.getProfile(player.uniqueId)
 
         if (profile == null) {
-            profile = PlayerProfile(player.uniqueId, player.name, 0, 0L)
+            profile = PlayerProfile(player.uniqueId, player.name, 1u, 0uL)
             plugin.databaseManager.createProfile(profile)
         }
 
