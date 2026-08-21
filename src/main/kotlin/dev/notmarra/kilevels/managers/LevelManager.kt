@@ -5,6 +5,7 @@ import dev.notmarra.kilevels.api.events.LevelDownEvent
 import dev.notmarra.kilevels.api.events.LevelUpEvent
 import dev.notmarra.kilevels.api.events.XpGainEvent
 import dev.notmarra.kilevels.api.events.XpRemoveEvent
+import dev.notmarra.kilevels.api.model.Level
 import dev.notmarra.kilevels.api.model.PlayerProfile
 import dev.notmarra.kilevels.utils.XpSource
 import net.objecthunter.exp4j.ExpressionBuilder
@@ -13,6 +14,11 @@ import org.bukkit.OfflinePlayer
 
 class LevelManager(private val plugin: KiLevels) {
     private val config = plugin.configManager.config
+    private var listLevels: HashMap<UInt, Level> = HashMap()
+
+    init {
+        initLevels()
+    }
 
     fun giveXp(player: OfflinePlayer, amount: ULong, source: XpSource = XpSource.OTHER) {
         val event = XpGainEvent(player, amount, source)
@@ -69,11 +75,10 @@ class LevelManager(private val plugin: KiLevels) {
     fun removeLevel(player: OfflinePlayer, amount: UInt) {
         if (amount <= 0UL) return
         val profile = plugin.cacheManager.getProfile(player.uniqueId) ?: return
-        var newLevel: UInt
-        if (amount >= profile.level) {
-            newLevel = 0u
+        val newLevel: UInt = if (amount >= profile.level) {
+            0u
         } else {
-            newLevel = profile.level - amount
+            profile.level - amount
         }
         val event = LevelDownEvent(player, profile.level, newLevel)
         Bukkit.getPluginManager().callEvent(event)
@@ -87,7 +92,7 @@ class LevelManager(private val plugin: KiLevels) {
     private fun checkAndProcessLevelUp(profile: PlayerProfile) {
         plugin.log.debug("Trying to check and process level up for profile ${profile.uuid}")
 
-        val xpNeeded = evaluateNeededXp(profile)
+        val xpNeeded = listLevels[profile.level]?.xp ?: 0U
 
         val maxLevel: UInt = config.levels.count().toUInt()
 
@@ -107,18 +112,33 @@ class LevelManager(private val plugin: KiLevels) {
     }
 
     private fun evaluateNeededXp(profile: PlayerProfile): ULong {
+        return evaluateNeededXp(profile.level)
+    }
+
+    private fun evaluateNeededXp(level: UInt): ULong {
         val expressionString = config.levelFormula
         plugin.log.debug("ExpressionString: $expressionString")
 
         val expression = ExpressionBuilder(expressionString)
-            .variable("%level%")
+            .variable("x")
             .build()
-            .setVariable("%level%", profile.level.toDouble())
+            .setVariable("x", level.toDouble())
         plugin.log.debug("Constructed expression: $expression")
 
         val xpNeeded: ULong = expression.evaluate().toULong()
         plugin.log.debug("Result: $xpNeeded")
 
         return xpNeeded
+    }
+
+    private fun initLevels() {
+        val levels = config.levels
+
+        for ((levelKey, level) in levels) {
+            val lvl: UInt = levelKey.toUInt()
+            val xp = evaluateNeededXp(lvl)
+            plugin.log.debug("Evaluating level $lvl (${level.title}): $xp xp")
+            listLevels[lvl] = Level(level.title, xp, lvl)
+        }
     }
 }

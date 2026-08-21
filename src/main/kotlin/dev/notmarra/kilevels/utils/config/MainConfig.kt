@@ -1,15 +1,17 @@
 package dev.notmarra.kilevels.utils.config
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable
+import org.spongepowered.configurate.objectmapping.meta.Setting
 
 @ConfigSerializable
 data class MainConfig(
     val debug: Boolean = false,
     val prefix: String = "",
+    @Setting("levelFormula")
     val levelFormula: String = "",
     val data: DataConfig = DataConfig(),
     val cache: CacheConfig = CacheConfig(),
-    val levels: List<Level> = listOf(),
+    val levels: Map<Int, Level> = mapOf(),
 )
 
 @ConfigSerializable
@@ -27,37 +29,27 @@ data class DataConfig(
 
 @ConfigSerializable
 data class DataPool(
-    val maximumPoolSize: Int = 10,
-    val minimumIdle: Int = 2,
-    val connectionTimeout: Long = 30000,
-    val idleTimeout: Long = 600000,
-    val maxLifetime: Long = 1800000
+    @Setting("maximumPoolSize") val maximumPoolSize: Int = 10,
+    @Setting("minimumIdle") val minimumIdle: Int = 2,
+    @Setting("connectionTimeout") val connectionTimeout: Long = 30000,
+    @Setting("idleTimeout") val idleTimeout: Long = 600000,
+    @Setting("maxLifetime") val maxLifetime: Long = 1800000
 )
 
 @ConfigSerializable
 data class CacheConfig(
     val ttl: Long = 300,
-    val destroyOnLeave: Boolean = true,
+    @Setting("destroyOnLeave") val destroyOnLeave: Boolean = true,
 )
 
 @ConfigSerializable
 data class Level(
     val title: String = "",
-    val reward: LevelReward = LevelReward(),
+    val rewards: LevelReward = LevelReward(),
 )
 
 @ConfigSerializable
 data class LevelReward(
-    val texts: LevelRewardsTexts = LevelRewardsTexts(),
-    val actions: LevelRewardsActions = LevelRewardsActions(),
-)
-
-@ConfigSerializable
-data class LevelRewardsTexts(
-    val texts: List<String> = listOf(),
-)
-
-@ConfigSerializable
-data class LevelRewardsActions(
+    val text: List<String> = listOf(),
     val actions: List<String> = listOf(),
 )

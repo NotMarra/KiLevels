@@ -4,10 +4,7 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import dev.notmarra.kilevels.KiLevels
 import dev.notmarra.kilevels.api.model.PlayerProfile
-import org.bukkit.entity.Player
-import java.sql.Connection
 import java.sql.SQLException
-import java.util.Locale.getDefault
 import java.util.UUID
 
 class DatabaseManager(private val plugin: KiLevels) {
@@ -93,8 +90,8 @@ class DatabaseManager(private val plugin: KiLevels) {
                             return PlayerProfile(
                                 uuid = uuid,
                                 name = plugin.server.getOfflinePlayer(uuid).name.toString(),
-                                level = level,
-                                xp = xp
+                                level = level.toUInt(),
+                                xp = xp.toULong()
                             )
                         }
                     }
@@ -114,8 +111,8 @@ class DatabaseManager(private val plugin: KiLevels) {
             dataSource.connection.use { conn ->
                 conn.prepareStatement(query).use { stmt ->
                     stmt.setString(1, profile.uuid.toString())
-                    stmt.setInt(2, profile.level)
-                    stmt.setLong(3, profile.xp)
+                    stmt.setInt(2, profile.level.toInt())
+                    stmt.setLong(3, profile.xp.toLong())
 
                     stmt.executeUpdate()
                 }
@@ -131,8 +128,8 @@ class DatabaseManager(private val plugin: KiLevels) {
         try {
             dataSource.connection.use { conn ->
                 conn.prepareStatement(query).use { stmt ->
-                    stmt.setInt(1, profile.level)
-                    stmt.setLong(2, profile.xp)
+                    stmt.setInt(1, profile.level.toInt())
+                    stmt.setLong(2, profile.xp.toLong())
                     stmt.setString(3, profile.uuid.toString())
 
                     stmt.executeUpdate()
@@ -154,8 +151,8 @@ class DatabaseManager(private val plugin: KiLevels) {
             dataSource.connection.use { conn ->
                 conn.prepareStatement(query).use { stmt ->
                     stmt.setString(1, profile.uuid.toString())
-                    stmt.setInt(2, profile.level)
-                    stmt.setLong(3, profile.xp)
+                    stmt.setInt(2, profile.level.toInt())
+                    stmt.setLong(3, profile.xp.toLong())
 
                     stmt.executeUpdate()
                 }
