@@ -123,7 +123,7 @@ class LevelManager(private val plugin: KiLevels) {
             .variable("x")
             .build()
             .setVariable("x", level.toDouble())
-        plugin.log.debug("Constructed expression: $expression")
+        plugin.log.debug("Constructed expression: ${expression.toString()}")
 
         val xpNeeded: ULong = expression.evaluate().toULong()
         plugin.log.debug("Result: $xpNeeded")
@@ -137,8 +137,8 @@ class LevelManager(private val plugin: KiLevels) {
         for ((levelKey, level) in levels) {
             val lvl: UInt = levelKey.toUInt()
             val xp = evaluateNeededXp(lvl)
-            plugin.log.debug("Evaluating level $lvl (${level.title}): $xp xp")
-            listLevels[lvl] = Level(level.title, xp, lvl)
+            plugin.log.debug("Evaluating level $lvl (${level.title}): $xp xp | ${level.rewards.actions.count()} rewards")
+            listLevels[lvl] = Level(level.title, xp, lvl, level.rewards.actions, level.rewards.text)
         }
     }
 }

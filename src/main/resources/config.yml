@@ -46,36 +46,48 @@ levels:
     rewards:
       text:
         - "<green> + 100$"
-        - "Grants fly permission"
+        - "<green> Run fly command"
       actions:
-        - "[MONEY] 100"
-        - "[COMMAND] fly"
+        - action: MONEY
+          amount: 100
+        - action: COMMAND
+          command: "fly"
   2:
     title: "II"
     rewards:
       text:
         - "<green> + 100$"
+        - "<green> + 50 experience"
       actions:
-        - "[MONEY] 100"
-        - "[XP] 50"
+        - action: MONEY
+          amount: 100
+        - action: XP
+          amount: 50
   3:
     title: "III"
     rewards:
       text:
         - "<green> + 100$"
+        - "<green> Grants fly permission"
       actions:
-        - "[MONEY] 100"
+        - action: MONEY
+          amount: 100
+        - action: PERMISSION
+          permission: "essentials.fly"
   4:
     title: "IV"
     rewards:
       text:
         - "<green> + 100$"
       actions:
-        - "[MONEY] 100"
+        - action: MONEY
+          amount: 100
   5:
     title: "V"
     rewards:
       text:
-        - "<green> + 500$"
+        - "<green> + 500$ <gray>(50% chance)"
       actions:
-        - "[MONEY] 500"
+        - action: MONEY
+          amount: 500
+          chance: 0.5

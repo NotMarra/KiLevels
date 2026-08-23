@@ -36,7 +36,9 @@ class KiLevels : JavaPlugin() {
     }
 
     override fun onDisable() {
-        cacheManager.saveAll()
+        if (::cacheManager.isInitialized) {
+            cacheManager.saveAll()
+        }
         if (::databaseManager.isInitialized) {
             databaseManager.close()
         }

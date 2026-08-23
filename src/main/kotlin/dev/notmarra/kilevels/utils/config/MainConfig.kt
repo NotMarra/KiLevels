@@ -1,5 +1,6 @@
 package dev.notmarra.kilevels.utils.config
 
+import dev.notmarra.kilevels.utils.config.level.LevelAction
 import org.spongepowered.configurate.objectmapping.ConfigSerializable
 import org.spongepowered.configurate.objectmapping.meta.Setting
 
@@ -51,5 +52,5 @@ data class Level(
 @ConfigSerializable
 data class LevelReward(
     val text: List<String> = listOf(),
-    val actions: List<String> = listOf(),
+    val actions: List<LevelAction> = listOf(),
 )

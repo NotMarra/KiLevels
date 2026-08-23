@@ -1,6 +1,8 @@
 package dev.notmarra.kilevels.utils.config
 
 import dev.notmarra.kilevels.KiLevels
+import dev.notmarra.kilevels.utils.config.level.LevelAction
+import dev.notmarra.kilevels.utils.config.level.LevelActionSerializer
 import org.bukkit.plugin.Plugin
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
@@ -25,6 +27,11 @@ class ConfigManager(private val plugin: KiLevels) {
         loader = YamlConfigurationLoader.builder()
             .path(configFile.toPath())
             .nodeStyle(NodeStyle.BLOCK)
+            .defaultOptions{ opts ->
+                opts.serializers { builder ->
+                    builder.register(LevelAction::class.java, LevelActionSerializer)
+                }
+            }
             .build()
 
         try {
