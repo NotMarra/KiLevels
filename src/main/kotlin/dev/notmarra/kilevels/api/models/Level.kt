@@ -1,4 +1,4 @@
-package dev.notmarra.kilevels.api.model
+package dev.notmarra.kilevels.api.models
 
 data class Level(
     val title: String,

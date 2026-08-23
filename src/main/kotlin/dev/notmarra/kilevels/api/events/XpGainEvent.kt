@@ -1,6 +1,6 @@
 package dev.notmarra.kilevels.api.events
 
-import dev.notmarra.kilevels.utils.XpSource
+import dev.notmarra.kilevels.api.enums.XpSource
 import org.bukkit.OfflinePlayer
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event

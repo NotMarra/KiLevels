@@ -1,7 +1,7 @@
 package dev.notmarra.kilevels.data
 
 import dev.notmarra.kilevels.KiLevels
-import dev.notmarra.kilevels.api.model.PlayerProfile
+import dev.notmarra.kilevels.api.models.PlayerProfile
 import org.bukkit.entity.Player
 import java.util.UUID
 

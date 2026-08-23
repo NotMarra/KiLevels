@@ -5,9 +5,9 @@ import dev.notmarra.kilevels.api.events.LevelDownEvent
 import dev.notmarra.kilevels.api.events.LevelUpEvent
 import dev.notmarra.kilevels.api.events.XpGainEvent
 import dev.notmarra.kilevels.api.events.XpRemoveEvent
-import dev.notmarra.kilevels.api.model.Level
-import dev.notmarra.kilevels.api.model.PlayerProfile
-import dev.notmarra.kilevels.utils.XpSource
+import dev.notmarra.kilevels.api.models.Level
+import dev.notmarra.kilevels.api.models.PlayerProfile
+import dev.notmarra.kilevels.api.enums.XpSource
 import net.objecthunter.exp4j.ExpressionBuilder
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer

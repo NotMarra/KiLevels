@@ -3,7 +3,7 @@ package dev.notmarra.kilevels.data
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import dev.notmarra.kilevels.KiLevels
-import dev.notmarra.kilevels.api.model.PlayerProfile
+import dev.notmarra.kilevels.api.models.PlayerProfile
 import java.sql.SQLException
 import java.util.UUID
 
