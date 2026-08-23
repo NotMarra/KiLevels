@@ -14,7 +14,8 @@ import org.bukkit.OfflinePlayer
 
 class LevelManager(private val plugin: KiLevels) {
     private val config = plugin.configManager.config
-    private var listLevels: HashMap<UInt, Level> = HashMap()
+    var listLevels: HashMap<UInt, Level> = HashMap()
+        private set
 
     init {
         initLevels()
