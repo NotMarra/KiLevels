@@ -13,8 +13,8 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.2.build.+")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("xyz.xenondevs.invui:invui:2.2.0")
-    implementation("xyz.xenondevs.invui:invui-kotlin:2.2.0")
+    implementation("xyz.xenondevs.invui:invui:2.3.2")
+    implementation("xyz.xenondevs.invui:invui-kotlin:2.3.2")
     implementation("org.spongepowered:configurate-yaml:4.2.0")
     implementation("com.zaxxer:HikariCP:7.1.0")
     implementation("net.objecthunter:exp4j:0.4.8")
