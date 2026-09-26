@@ -8,8 +8,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting
 data class MainConfig(
     val debug: Boolean = false,
     val prefix: String = "",
-    @Setting("levelFormula")
-    val levelFormula: String = "",
+    @Setting("levelFormula") val levelFormula: String = "",
     val data: DataConfig = DataConfig(),
     val cache: CacheConfig = CacheConfig(),
     val levels: Map<Int, Level> = mapOf(),

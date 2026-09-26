@@ -5,6 +5,7 @@ import dev.notmarra.kilevels.data.DatabaseManager
 import dev.notmarra.kilevels.events.JoinEvent
 import dev.notmarra.kilevels.events.LeaveEvent
 import dev.notmarra.kilevels.managers.LevelManager
+import dev.notmarra.kilevels.managers.RewardManager
 import dev.notmarra.kilevels.utils.config.ConfigManager
 import dev.notmarra.kilevels.utils.KiLevelsLogger
 import org.bukkit.plugin.java.JavaPlugin
@@ -19,6 +20,8 @@ class KiLevels : JavaPlugin() {
         private set
     lateinit var levelManager: LevelManager
         private set
+    lateinit var rewardManager: RewardManager
+        private set
     val log = KiLevelsLogger(this)
 
     override fun onEnable() {
@@ -26,6 +29,7 @@ class KiLevels : JavaPlugin() {
         databaseManager = DatabaseManager(this)
         cacheManager = CacheManager(this)
         levelManager = LevelManager(this)
+        rewardManager = RewardManager(this)
         InvUI.getInstance().setPlugin(this)
 
         log.debug("Initializing listeners")

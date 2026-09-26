@@ -103,10 +103,11 @@ class LevelManager(private val plugin: KiLevels) {
 
             if (event.isCancelled) return
 
+            plugin.rewardManager.processReward(profile.level, profile.uuid)
+
             profile.xp -= xpNeeded
             profile.level += 1u
 
-            // TODO("PROCESS REWARDS")
 
             checkAndProcessLevelUp(profile)
         }
