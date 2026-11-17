@@ -13,6 +13,8 @@ class LeaveEvent(private val plugin: KiLevels): Listener {
         val player = event.player
 
         plugin.log.debug("Trying to remove ${player.uniqueId} from cache")
-        plugin.cacheManager.remove(player.uniqueId)
+        if (plugin.configManager.config.cache.destroyOnLeave) {
+            plugin.cacheManager.remove(player.uniqueId)
+        }
     }
 }

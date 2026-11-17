@@ -2,12 +2,16 @@ package dev.notmarra.kilevels.data
 
 import dev.notmarra.kilevels.KiLevels
 import dev.notmarra.kilevels.api.models.PlayerProfile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 class CacheManager(private val plugin: KiLevels) {
-    var cache: HashMap<UUID, PlayerProfile> = HashMap()
-        private set;
+    var cache: ConcurrentHashMap<UUID, PlayerProfile> = ConcurrentHashMap()
+        private set
     private val config = plugin.configManager.config.cache
 
     init {
@@ -50,9 +54,7 @@ class CacheManager(private val plugin: KiLevels) {
 
         plugin.server.scheduler.runTaskAsynchronously(plugin, Runnable {
             saveProfile(profile)
-            if (config.destroyOnLeave) {
-                cache.remove(uuid)
-            }
+            cache.remove(uuid)
             plugin.log.debug("Profile ${profile.name} has been removed from cache")
         })
     }
@@ -75,12 +77,11 @@ class CacheManager(private val plugin: KiLevels) {
      * @param UUID
      * @return PlayerProfile
      */
-    fun getProfile(uuid: UUID): PlayerProfile? {
-        var profile: PlayerProfile? = cache[uuid]
-        if (profile == null) {
-            profile = plugin.databaseManager.getProfile(uuid)
+    suspend fun getProfile(uuid: UUID): PlayerProfile? {
+        cache[uuid]?.let { return it }
+        return withContext(Dispatchers.IO) {
+            plugin.databaseManager.getProfile(uuid)
         }
-        return profile
     }
 
     /**
@@ -104,9 +105,8 @@ class CacheManager(private val plugin: KiLevels) {
             for (profile in cache.values) {
                 try {
                     plugin.databaseManager.saveProfile(profile)
-                    val player = plugin.server.getPlayer(profile.name)
-                    if (player != null && !player.isOnline) {
-                        remove(player.uniqueId)
+                    if (Bukkit.getPlayer(profile.uuid) == null) {
+                        remove(profile.uuid)
                     }
                 } catch (e: Exception) {
                     plugin.log.severe("Error while saving profile ${profile.uuid}: ${e.message}")
@@ -114,7 +114,7 @@ class CacheManager(private val plugin: KiLevels) {
             }
 
             plugin.log.debug("Saving finished autosaveTask (interval: $intervalTicks , size: ${cache.size})")
-        }, intervalTicks, intervalSeconds)
+        }, intervalTicks, intervalTicks)
     }
 
     private fun loadProfile(player: Player): PlayerProfile {
