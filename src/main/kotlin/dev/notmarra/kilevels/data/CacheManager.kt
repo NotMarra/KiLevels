@@ -34,7 +34,7 @@ class CacheManager(private val plugin: KiLevels) {
         plugin.server.scheduler.runTaskAsynchronously(plugin, Runnable {
             val profile = loadProfile(player)
 
-            cache[uuid] = profile
+            cache.putIfAbsent(uuid, profile)
 
             plugin.log.debug("Profile ${player.name} has been added to cache")
         })
@@ -79,9 +79,11 @@ class CacheManager(private val plugin: KiLevels) {
      */
     suspend fun getProfile(uuid: UUID): PlayerProfile? {
         cache[uuid]?.let { return it }
-        return withContext(Dispatchers.IO) {
+        val loaded = withContext(Dispatchers.IO) {
             plugin.databaseManager.getProfile(uuid)
-        }
+        } ?: return null
+
+        return cache.putIfAbsent(uuid, loaded) ?: loaded
     }
 
     /**

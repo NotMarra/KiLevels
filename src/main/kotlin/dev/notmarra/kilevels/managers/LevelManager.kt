@@ -21,7 +21,8 @@ class LevelManager(private val plugin: KiLevels) {
         initLevels()
     }
 
-    fun giveXp(player: OfflinePlayer, amount: ULong, source: XpSource = XpSource.OTHER) {
+    suspend fun giveXp(player: OfflinePlayer, amount: ULong, source: XpSource = XpSource.OTHER) {
+        check(Bukkit.isPrimaryThread()) {"Must be called on primary thread!"}
         val event = XpGainEvent(player, amount, source)
         Bukkit.getPluginManager().callEvent(event)
 
@@ -38,7 +39,8 @@ class LevelManager(private val plugin: KiLevels) {
         checkAndProcessLevelUp(profile)
     }
 
-    fun removeXp(player: OfflinePlayer, amount: ULong) {
+    suspend fun removeXp(player: OfflinePlayer, amount: ULong) {
+        check(Bukkit.isPrimaryThread()) {"Must be called on primary thread!"}
         val event = XpRemoveEvent(player, amount)
         Bukkit.getPluginManager().callEvent(event)
 
@@ -56,28 +58,29 @@ class LevelManager(private val plugin: KiLevels) {
         }
     }
 
-    fun giveLevel(player: OfflinePlayer, amount: UInt) {
+    suspend fun giveLevel(player: OfflinePlayer, amount: UInt) {
+        check(Bukkit.isPrimaryThread()) {"Must be called on primary thread!"}
         if (amount <= 0UL) return
         val profile = plugin.cacheManager.getProfile(player.uniqueId) ?: return
-        val newLevel = profile.level+amount
+        val maxLevel: UInt = config.levels.count().toUInt()
+        val newLevel = minOf(profile.level + amount, maxLevel)
+        if (newLevel == profile.level) return
+
         val event = LevelUpEvent(player, profile.level, newLevel)
+
         Bukkit.getPluginManager().callEvent(event)
 
         if (event.isCancelled) return
 
-        val maxLevel: UInt = config.levels.count().toUInt()
-        if (newLevel > maxLevel) {
-            profile.level = maxLevel
-        } else {
-            profile.level = newLevel
-        }
+        profile.level = newLevel
     }
 
-    fun removeLevel(player: OfflinePlayer, amount: UInt) {
-        if (amount <= 0UL) return
+    suspend fun removeLevel(player: OfflinePlayer, amount: UInt) {
+        check(Bukkit.isPrimaryThread()) {"Must be called on primary thread!"}
+        if (amount <= 0u) return
         val profile = plugin.cacheManager.getProfile(player.uniqueId) ?: return
         val newLevel: UInt = if (amount >= profile.level) {
-            0u
+            1u
         } else {
             profile.level - amount
         }
@@ -93,7 +96,7 @@ class LevelManager(private val plugin: KiLevels) {
     private fun checkAndProcessLevelUp(profile: PlayerProfile) {
         plugin.log.debug("Trying to check and process level up for profile ${profile.uuid}")
 
-        val xpNeeded = listLevels[profile.level]?.xp ?: 0U
+        val xpNeeded = listLevels[profile.level]?.xp ?: return
 
         val maxLevel: UInt = config.levels.count().toUInt()
 
@@ -103,11 +106,10 @@ class LevelManager(private val plugin: KiLevels) {
 
             if (event.isCancelled) return
 
-            plugin.rewardManager.processReward(profile.level, profile.uuid)
-
             profile.xp -= xpNeeded
             profile.level += 1u
 
+            plugin.rewardManager.processReward(profile.level, profile.uuid)
 
             checkAndProcessLevelUp(profile)
         }
