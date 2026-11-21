@@ -30,6 +30,30 @@ class RewardManager(private val plugin: KiLevels) {
 
     private fun processReward(list: List<LevelAction>, player: OfflinePlayer) {
         // TODO: Add process actions
+        for (action in list) {
+            when (action) {
+                is LevelAction.Money -> {
+                    // TODO: add vault hook
+                }
+                is LevelAction.Xp -> {
+                    val online = player.player
+                    online?.giveExp(action.amount.toInt())
+                    // TODO: add reward to process for offline players
+                }
+                is LevelAction.Command -> {
+                    val name = player.name
+                    val replacements = mapOf("%player%" to name)
+                    var text = action.command
+                    for ((key, value) in replacements) text = text.replace(key, value?:"")
+
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), text)
+                }
+                is LevelAction.Permission -> {
+                    return
+                    // TODO: add luckperms hook
+                }
+            }
+        }
     }
 
     private fun processRewardTexts(list: List<String>, player: OfflinePlayer) {
